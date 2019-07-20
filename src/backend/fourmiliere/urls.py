@@ -13,6 +13,7 @@ urlpatterns = [
     path('user/signup/', views.UserView.sign_up),
     path('user/signin/', views.UserView.sign_in),
     path('user/auth/', views.UserView.is_login),
+    path('user/signout/', views.UserView.sign_out),
     path('post/hate/', views.PostView.hate),
     path('post/like/', views.PostView.like),
     path('post/new/', views.PostView.new_post),

@@ -73,7 +73,7 @@ class UserView(viewsets.ModelViewSet):
                                 safe=False
                                 )
         try:
-            logout(request, request.user)
+            logout(request)
             return JsonResponse({'message': '登出成功'},
                                 status=status.HTTP_200_OK,
                                 safe=False
@@ -136,8 +136,13 @@ class PostView(viewsets.ModelViewSet):
                                 )
 
     def new_post(request):
-        if request.user.is_authenticated:
-            post = PostSerializer(request.GET)
+        postbody = request.GET.copy()
+        postbody._mutable = True
+        postbody['username'] = request.user.username
+        postbody['like'] = 0
+        postbody['hate'] = 0
+        post = PostSerializer(data=postbody)
+        if request.user.is_authenticated and post.is_valid():
             post.save()
             return JsonResponse({'message': '发布成功'},
                                 status=status.HTTP_200_OK,
