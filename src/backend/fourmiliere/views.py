@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from rest_framework import viewsets
-from .models import User, Post
-from .serializers import UserSerializer, PostSerializer
+from .models import User, Post, Attitue
+from .models import ATTITUTE
+from .serializers import UserSerializer, PostSerializer, AttitudeSerializer
 from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
@@ -137,10 +138,29 @@ class PostView(viewsets.ModelViewSet):
                                 safe=False
                                 )
         try:
+            username = request.user.username
             pid = request.GET.get('pid')
             post = Post.objects.filter(id=pid)
-            post.like += 1
-            post.save()
+            if not post:
+                # 留言不存在
+                return JsonResponse({'error': '留言不存在'},
+                                    status=status.HTTP_400_BAD_REQUEST,
+                                    safe=False
+                                    )
+            attitude = Attitue.objects().filter(pid=id, username=username)
+            if not attitude:
+                # 此前用户对这条留言没有态度
+                new_attitude = AttitudeSerializer(username=username,
+                                                  pid=pid,
+                                                  attitude=ATTITUTE.LIKE
+                                                  )
+                new_attitude.save()
+            elif attitude.attitude == ATTITUTE.LIKE:
+                # 此前为赞，取消赞
+                attitude.delete()
+            elif attitude.attitude == ATTITUTE.HATE:
+                # 此前为踩，改为赞
+                attitude.update(attitude=ATTITUTE.LIKE)
             return JsonResponse({'message': '完成'},
                                 status=status.HTTP_200_OK,
                                 safe=False
@@ -158,10 +178,29 @@ class PostView(viewsets.ModelViewSet):
                                 safe=False
                                 )
         try:
+            username = request.user.username
             pid = request.GET.get('pid')
             post = Post.objects.filter(id=pid)
-            post.hate += 1
-            post.save()
+            if not post:
+                # 留言不存在
+                return JsonResponse({'error': '留言不存在'},
+                                    status=status.HTTP_400_BAD_REQUEST,
+                                    safe=False
+                                    )
+            attitude = Attitue.objects().filter(pid=id, username=username)
+            if not attitude:
+                # 此前用户对这条留言没有态度
+                new_attitude = AttitudeSerializer(username=username,
+                                                  pid=pid,
+                                                  attitude=ATTITUTE.HATE
+                                                  )
+                new_attitude.save()
+            elif attitude.attitude == ATTITUTE.HATE:
+                # 此前为踩，取消踩
+                attitude.delete()
+            elif attitude.attitude == ATTITUTE.LIKE:
+                # 此前为赞，改为踩
+                attitude.update(attitude=ATTITUTE.HATE)
             return JsonResponse({'message': '完成'},
                                 status=status.HTTP_200_OK,
                                 safe=False
