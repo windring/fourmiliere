@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     signIn () {
-      this.$http.get('user/signin', {
+      this.$http.get('user/signin/', {
         params: {
           username: this.username,
           password: this.password
@@ -60,7 +60,7 @@ export default {
       })
     },
     signUp () {
-      this.$http.get('user/signup', {
+      this.$http.get('user/signup/', {
         params: {
           username: this.username,
           password: this.password

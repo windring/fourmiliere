@@ -3,11 +3,11 @@
     <a-layout-header>
       <a-menu theme="dark" mode="horizontal" class="header-menu">
         <a-menu-item key="1">首页</a-menu-item>
-        <a-menu-item key="2" @click="showModal" v-if="this.$store.loginState">登录 / 注册</a-menu-item>
+        <a-menu-item key="2" @click="showModal" v-if="!this.$store.state.loginState">登录 / 注册</a-menu-item>
+        <a-menu-item key="3" @click="signout" v-if="this.$store.state.loginState">登出</a-menu-item>
       </a-menu>
     </a-layout-header>
     <a-layout-content class="content-box">
-      <hello-world class="content"></hello-world>
     </a-layout-content>
     <a-layout-footer class="text-center">
       fourmilière frontend @2019 windring
@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import SignModal from './components/SignModal.vue'
 import CheckSign from './components/CheckSign.vue'
 
@@ -29,13 +28,24 @@ export default {
     }
   },
   components: {
-    HelloWorld,
     SignModal,
     CheckSign,
   },
   methods: {
     showModal () {
       this.$store.commit('updateShowModal', true)
+    },
+    signout () {
+      this.$http.get('user/signout')
+        .then((res) => {
+          window.reload()
+        })
+        .catch((err) => {
+          this.$notification.error({
+            message: '登出失败',
+            title: 'fourmiliere 留言板'
+          })
+        })
     }
   },
 }
