@@ -38,13 +38,17 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.$http.get('http://backend.docker.io/user/signup', {
-        username: '111',
-        password: '111'
+      this.$http.get('user/signup/', {
+        params: {
+          username: '111',
+          password: '111'
+        }
       }).then((res) => {
         console.log(res)
-      }).then((error) => {
-        console.log(error)
+        console.log('没出错')
+      }).catch((error) => {
+        console.log(error.response.data)
+        console.log('出错了')
       })
     })
   },
