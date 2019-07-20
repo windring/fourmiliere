@@ -6,12 +6,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     username: '',
-    loginState: '',
+    loginState: false,
     showModal: false
   },
   mutations: {
     updateShowModal (state, showModal) {
       state.showModal = showModal
+    },
+    updateUsername (state, username) {
+      state.username = username
+      state.loginState = !state.loginState
     }
   },
   actions: {

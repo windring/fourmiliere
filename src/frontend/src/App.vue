@@ -3,7 +3,7 @@
     <a-layout-header>
       <a-menu theme="dark" mode="horizontal" class="header-menu">
         <a-menu-item key="1">首页</a-menu-item>
-        <a-menu-item key="2" @click="showModal">登录 / 注册</a-menu-item>
+        <a-menu-item key="2" @click="showModal" v-if="this.$store.loginState">登录 / 注册</a-menu-item>
       </a-menu>
     </a-layout-header>
     <a-layout-content class="content-box">

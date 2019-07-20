@@ -12,10 +12,10 @@
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" class="sign-button">登录</a-button>
+        <a-button type="primary" class="sign-button" @click="signIn">登录</a-button>
       </a-form-item>
       <a-form-item>
-        <a-button class="sign-button">注册</a-button>
+        <a-button class="sign-button" @click="signUp">注册</a-button>
       </a-form-item>
     </a-form>
     <template slot="footer">
@@ -30,6 +30,58 @@ export default {
     return {
       username: '',
       password: '',
+    }
+  },
+  methods: {
+    signIn () {
+      this.$http.get('user/signin', {
+        params: {
+          username: this.username,
+          password: this.password
+        }
+      })
+      .then((res) => {
+        console.log('登录成功')
+        console.log(res)
+        this.$notification.info({
+          message: `欢迎回来 ${res.data.username}`,
+          title: 'fourmiliere 留言板'
+        })
+        this.isShow = false
+        this.$store.commit('updateUsername', res.data.username)
+      })
+      .catch((err) => {
+        console.log('登录失败')
+        console.log(err.response.data.error)
+        this.$notification.error({
+          message: 'fourmiliere 留言板',
+          description: '登录失败'
+        });
+      })
+    },
+    signUp () {
+      this.$http.get('user/signup', {
+        params: {
+          username: this.username,
+          password: this.password
+        }
+      })
+      .then((res) => {
+        console.log('注册成功')
+        console.log(res)
+        this.$notification.info({
+          message: `注册成功，这是你的用户名 ${res.data.username}`,
+          title: 'fourmiliere 留言板'
+        })
+      })
+      .catch((err) => {
+        console.log('注册失败')
+        console.log(err.response.data.error)
+        this.$notification.error({
+          message: 'fourmiliere 留言板',
+          description: `注册失败，${err.response.data.error}`
+        });
+      })
     }
   },
   computed: {
