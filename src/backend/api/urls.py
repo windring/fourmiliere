@@ -24,8 +24,7 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('api/', include('fourmiliere.urls')),
 ]
