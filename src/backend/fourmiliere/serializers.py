@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Post, Like, Hate
+from .models import User, Post, Attitue
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -14,13 +14,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'content', 'create_time', 'like', 'hate')
 
 
-class LikeSerializer(serializers.ModelSerializer):
+class AttitudeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Like
-        fields = ('id', 'username', 'pid')
-
-
-class HateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Hate
-        fields = ('id', 'username', 'pid')
+        model = Attitue
+        fields = ('id', 'username', 'pid', 'attitude')

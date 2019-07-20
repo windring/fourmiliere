@@ -1,5 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from enum import Enum, unique
+
+
+@unique
+class ATTITUTE(Enum):
+    HATE = -1
+    LIKE = 1
+    UNDE = 0
 
 
 class User(AbstractUser):
@@ -15,11 +23,8 @@ class Post(models.Model):
     hate = models.IntegerField()
 
 
-class Hate(models.Model):
-    username = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
+class Attitue(models.Model):
+    username = models.ForeignKey('User', on_delete=models.CASCADE)
     pid = models.ForeignKey('Post', on_delete=models.CASCADE, to_field='id')
+    attitude = models.IntegerField()
 
-
-class Like(models.Model):
-    username = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
-    pid = models.ForeignKey('Post', on_delete=models.CASCADE, to_field='id')
