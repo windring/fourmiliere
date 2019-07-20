@@ -5,9 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    nickname: '',
+    username: '',
     loginState: '',
-    showModal: false,
+    showModal: false
   },
   mutations: {
     updateShowModal (state, showModal) {

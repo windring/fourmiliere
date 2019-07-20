@@ -2,7 +2,7 @@
   <a-modal type="primary" title="登录/注册" v-model="isShow" centered>
     <a-form>
       <a-form-item>
-        <a-input placeholder="昵称" v-model="nickname">
+        <a-input placeholder="昵称" v-model="username">
           <a-icon slot="prefix" type="user"></a-icon>
         </a-input>
       </a-form-item>
@@ -28,7 +28,7 @@ export default {
   name: 'Sign-In-Sign-Up',
   data () {
     return {
-      nickname: '',
+      username: '',
       password: '',
     }
   },
