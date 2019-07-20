@@ -8,7 +8,7 @@ class User(AbstractUser):
 
 
 class Post(models.Model):
-    username = models.ForeignKey('User', on_delete=models.SET_NULL)
+    username = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
     content = models.CharField(max_length=2000)
     create_time = models.BigIntegerField()
     like = models.IntegerField()
