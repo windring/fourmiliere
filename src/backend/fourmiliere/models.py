@@ -13,3 +13,13 @@ class Post(models.Model):
     create_time = models.BigIntegerField()
     like = models.IntegerField()
     hate = models.IntegerField()
+
+
+class Hate(models.Model):
+    username = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
+    pid = models.ForeignKey('Post', on_delete=models.CASCADE, to_field='id')
+
+
+class Like(models.Model):
+    username = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
+    pid = models.ForeignKey('Post', on_delete=models.CASCADE, to_field='id')
