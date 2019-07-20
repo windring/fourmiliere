@@ -1,11 +1,10 @@
 from django.http import JsonResponse
-from django.shortcuts import render
 from rest_framework import viewsets
 from .models import User, Post
 from .serializers import UserSerializer, PostSerializer
-from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
+from django.core import serializers
 
 
 class UserView(viewsets.ModelViewSet):
@@ -35,11 +34,12 @@ class UserView(viewsets.ModelViewSet):
     def sign_in(request):
         username = request.GET.get('username')
         password = request.GET.get('password')
-        user = authenticate(nickname=username,
+        user = authenticate(username=username,
                             password=password)
-
-        if not user:
-            login(request, user)
+        if user is not None:
+            login(request,
+                  user
+                  )
             return JsonResponse({'username': username},
                                 status=status.HTTP_200_OK,
                                 safe=False
@@ -86,6 +86,13 @@ class UserView(viewsets.ModelViewSet):
 class PostView(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def all_post(request):
+        lst = Post.objects.all()
+        return JsonResponse(serializers.serialize('json', lst),
+                            status=status.HTTP_200_OK,
+                            safe=False
+                            )
 
     def new_post(request):
         if request.user.is_authenticated:
