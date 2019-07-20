@@ -9,6 +9,10 @@ from django.core import serializers
 from django.core.paginator import Paginator
 
 
+class MyError(Exception):
+    pass
+
+
 class AttitudeView(viewsets.ModelViewSet):
     queryset = Attitude.objects.all()
     serializer_class = AttitudeSerializer
@@ -161,6 +165,7 @@ class PostView(viewsets.ModelViewSet):
                                 )
 
     def like(request):
+        # return JsonResponse({str(type(Attitude)): str(type(Post))})
         if not request.user.is_authenticated:
             return JsonResponse({'error': '未登录'},
                                 status=status.HTTP_401_UNAUTHORIZED,
@@ -169,43 +174,56 @@ class PostView(viewsets.ModelViewSet):
         try:
             username = request.user.username
             pid = request.GET.get('pid')
-            post = Post.objects.filter(id=pid)
+            pid = int(pid)
+            post = Post.objects.get(id=pid)
             if not post:
                 # 留言不存在
                 return JsonResponse({'error': '留言不存在'},
                                     status=status.HTTP_400_BAD_REQUEST,
                                     safe=False
                                     )
-            attitude = Attitude.objects.filter(pid=id)\
-                .filter(username=username)
+            attitude = Attitude.objects.filter(pid=pid)
+            if len(attitude) > 0:
+                attitude = attitude.get(username=username)
             if not attitude:
                 # 此前用户对这条留言没有态度
-                new_attitude = AttitudeSerializer(username=username,
-                                                  pid=pid,
-                                                  attitude=ATTITUTE.LIKE
-                                                  )
-                new_attitude.save()
-                post.update(like=post.like + 1)
-            elif attitude.attitude == ATTITUTE.LIKE:
+                pack = {
+                    'username': username,
+                    'pid': pid,
+                    'attitude': ATTITUTE.LIKE.value
+                }
+                new_attitude = AttitudeSerializer(data=pack)
+                if new_attitude.is_valid():
+                    new_attitude.save()
+                    post.like = post.like + 1
+                    post.save()
+                else:
+                    raise MyError('invalid data')
+            elif attitude.attitude == ATTITUTE.LIKE.value:
                 # 此前为赞，取消赞
                 attitude.delete()
-                post.update(like=post.like - 1)
-            elif attitude.attitude == ATTITUTE.HATE:
+                post.like = post.like - 1
+                post.save()
+            elif attitude.attitude == ATTITUTE.HATE.value:
                 # 此前为踩，改为赞
-                attitude.update(attitude=ATTITUTE.LIKE)
-                post.update(like=post.like + 1)
-                post.update(hate=post.hate - 1)
-            return JsonResponse({'message': '完成'},
+                attitude.attitude = ATTITUTE.LIKE.value
+                attitude.save()
+                post.like = post.like + 1
+                post.hate = post.hate - 1
+                post.save()
+            return JsonResponse({'message': '完成',
+                                 'like': post.like},
                                 status=status.HTTP_200_OK,
                                 safe=False
                                 )
         except Exception as e:
-            return JsonResponse({'error', str(e)},
+            return JsonResponse({'error', ''},
                                 status=status.HTTP_400_BAD_REQUEST,
                                 safe=False
                                 )
 
     def hate(request):
+        # return JsonResponse({str(type(Attitude)): str(type(Post))})
         if not request.user.is_authenticated:
             return JsonResponse({'error': '未登录'},
                                 status=status.HTTP_401_UNAUTHORIZED,
@@ -214,38 +232,50 @@ class PostView(viewsets.ModelViewSet):
         try:
             username = request.user.username
             pid = request.GET.get('pid')
-            post = Post.objects.filter(id=pid)
+            pid = int(pid)
+            post = Post.objects.get(id=pid)
             if not post:
                 # 留言不存在
                 return JsonResponse({'error': '留言不存在'},
                                     status=status.HTTP_400_BAD_REQUEST,
                                     safe=False
                                     )
-            attitude = Attitude.objects.filter(pid=id)\
-                .filter(username=username)
+            attitude = Attitude.objects.filter(pid=pid)
+            if len(attitude) > 0:
+                attitude = attitude.get(username=username)
             if not attitude:
                 # 此前用户对这条留言没有态度
-                new_attitude = AttitudeSerializer(username=username,
-                                                  pid=pid,
-                                                  attitude=ATTITUTE.HATE
-                                                  )
-                new_attitude.save()
-                post.update(hate=post.hate + 1)
-            elif attitude.attitude == ATTITUTE.HATE:
+                pack = {
+                    'username': username,
+                    'pid': pid,
+                    'attitude': ATTITUTE.HATE.value
+                }
+                new_attitude = AttitudeSerializer(data=pack)
+                if new_attitude.is_valid():
+                    new_attitude.save()
+                    post.hate = post.hate + 1
+                    post.save()
+                else:
+                    raise MyError('invalid data')
+            elif attitude.attitude == ATTITUTE.HATE.value:
                 # 此前为踩，取消踩
                 attitude.delete()
-                post.update(hate=post.hate - 1)
-            elif attitude.attitude == ATTITUTE.LIKE:
+                post.hate = post.hate - 1
+                post.save()
+            elif attitude.attitude == ATTITUTE.LIKE.value:
                 # 此前为赞，改为踩
-                attitude.update(attitude=ATTITUTE.HATE)
-                post.update(like=post.like - 1)
-                post.update(hate=post.hate + 1)
-            return JsonResponse({'message': '完成'},
+                attitude.attitude = ATTITUTE.HATE.value
+                attitude.save()
+                post.like = post.like - 1
+                post.hate = post.hate + 1
+                post.save()
+            return JsonResponse({'message': '完成',
+                                 'hate': post.hate},
                                 status=status.HTTP_200_OK,
                                 safe=False
                                 )
         except Exception as e:
-            return JsonResponse({'error', str(e)},
+            return JsonResponse({'error', ''},
                                 status=status.HTTP_400_BAD_REQUEST,
                                 safe=False
                                 )
