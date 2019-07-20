@@ -7,9 +7,12 @@ export default new Vuex.Store({
   state: {
     nickname: '',
     loginState: '',
+    showModal: false,
   },
   mutations: {
-
+    updateShowModal (state, showModal) {
+      state.showModal = showModal
+    }
   },
   actions: {
 

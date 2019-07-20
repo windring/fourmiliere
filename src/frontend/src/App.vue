@@ -3,7 +3,7 @@
     <a-layout-header>
       <a-menu theme="dark" mode="horizontal" class="header-menu">
         <a-menu-item key="1">首页</a-menu-item>
-        <a-menu-item key="2">登录 / 注册</a-menu-item>
+        <a-menu-item key="2" @click="showModal">登录 / 注册</a-menu-item>
       </a-menu>
     </a-layout-header>
     <a-layout-content class="content-box">
@@ -12,11 +12,13 @@
     <a-layout-footer class="text-center">
       fourmilière frontend @2019 windring
     </a-layout-footer>
+    <sign-modal></sign-modal>
   </a-layout>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import SignModal from './components/SignModal.vue'
 
 export default {
   name: 'app',
@@ -26,8 +28,12 @@ export default {
   },
   components: {
     HelloWorld,
+    SignModal,
   },
   methods: {
+    showModal () {
+      this.$store.commit('updateShowModal', true)
+    }
   },
 }
 </script>
