@@ -7,6 +7,7 @@ import 'ant-design-vue/dist/antd.css'
 import store from './store'
 
 Vue.config.productionTip = false
+axios.defaults.baseURL = 'http://192.168.99.100:8002/api/'
 
 Vue.use(Antd)
 Vue.use(VueAxios, axios)

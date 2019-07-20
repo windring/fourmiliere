@@ -13,12 +13,14 @@
       fourmilière frontend @2019 windring
     </a-layout-footer>
     <sign-modal></sign-modal>
+    <check-sign></check-sign>
   </a-layout>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import SignModal from './components/SignModal.vue'
+import CheckSign from './components/CheckSign.vue'
 
 export default {
   name: 'app',
@@ -29,6 +31,7 @@ export default {
   components: {
     HelloWorld,
     SignModal,
+    CheckSign,
   },
   methods: {
     showModal () {
