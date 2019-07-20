@@ -5,6 +5,7 @@ from .serializers import UserSerializer, PostSerializer
 from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
+from django.core.paginator import Paginator
 
 
 class UserView(viewsets.ModelViewSet):
@@ -94,6 +95,27 @@ class PostView(viewsets.ModelViewSet):
                             safe=False
                             )
 
+    def page(request):
+        page_size = request.GET.get('page_size')
+        index = request.GET.get('index')
+        if not page_size or not index:
+            return JsonResponse({'error': '参数错误'},
+                                status=status.HTTP_400_BAD_REQUEST,
+                                safe=False
+                                )
+        try:
+            pages = Paginator(Post.objects().all(), page_size)
+            ret = pages(index)
+            return JsonResponse(serializers.serialize(pages.object_list),
+                                status=status.HTTP_200_OK,
+                                safe=False
+                                )
+        except Exception as e:
+            return JsonResponse({'error': str(e)},
+                                status=status.HTTP_400_BAD_REQUEST,
+                                safe=False
+                                )
+
     def new_post(request):
         if request.user.is_authenticated:
             post = PostSerializer(request.GET)
@@ -149,3 +171,4 @@ class PostView(viewsets.ModelViewSet):
                                 status=status.HTTP_400_BAD_REQUEST,
                                 safe=False
                                 )
+
