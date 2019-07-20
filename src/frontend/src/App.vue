@@ -8,6 +8,9 @@
       </a-menu>
     </a-layout-header>
     <a-layout-content class="content-box">
+      <new-post></new-post>
+      <a-divider>fourmiliere 留言板</a-divider>
+      <post-list></post-list>
     </a-layout-content>
     <a-layout-footer class="text-center">
       fourmilière frontend @2019 windring
@@ -20,6 +23,8 @@
 <script>
 import SignModal from './components/SignModal.vue'
 import CheckSign from './components/CheckSign.vue'
+import PostList from './components/PostList.vue'
+import NewPost from './components/NewPost.vue'
 
 export default {
   name: 'app',
@@ -30,6 +35,8 @@ export default {
   components: {
     SignModal,
     CheckSign,
+    PostList,
+    NewPost
   },
   methods: {
     showModal () {
@@ -63,7 +70,7 @@ export default {
   color: #2c3e50;
 }
 .content-box {
-  padding: 64px 50px;
+  padding: 64px 10vw;
   min-height: calc(100vh - 134px);
   display: flex;
   flex-direction: column;
