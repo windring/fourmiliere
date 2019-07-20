@@ -89,8 +89,25 @@ class PostView(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    @staticmethod
+    def add_myattitude(request, lst):
+        ret = []
+        if request.user.is_authenticated:
+            username = request.user.username
+            for i in lst:
+                attitude = Attitue.objects().filter(username=username,
+                                                    pid=i.pid)
+                i['attitude'] = attitude.attitude
+                ret.append(i)
+        else:
+            for i in lst:
+                i['attitude'] = ATTITUTE.UNDE
+                ret.append(i)
+        return ret
+
     def all_post(request):
         lst = Post.objects.all()
+        lst = PostView.add_myattitude(request, lst)
         return JsonResponse(serializers.serialize('json', lst),
                             status=status.HTTP_200_OK,
                             safe=False
@@ -106,8 +123,9 @@ class PostView(viewsets.ModelViewSet):
                                 )
         try:
             pages = Paginator(Post.objects().all(), page_size)
-            ret = pages(index)
-            return JsonResponse(serializers.serialize(pages.object_list),
+            ret = pages(index).object_list
+            ret = PostView.add_myattitude(request, ret)
+            return JsonResponse(serializers.serialize(ret),
                                 status=status.HTTP_200_OK,
                                 safe=False
                                 )
@@ -155,12 +173,16 @@ class PostView(viewsets.ModelViewSet):
                                                   attitude=ATTITUTE.LIKE
                                                   )
                 new_attitude.save()
+                post.update(like=post.like + 1)
             elif attitude.attitude == ATTITUTE.LIKE:
                 # 此前为赞，取消赞
                 attitude.delete()
+                post.update(like=post.like - 1)
             elif attitude.attitude == ATTITUTE.HATE:
                 # 此前为踩，改为赞
                 attitude.update(attitude=ATTITUTE.LIKE)
+                post.update(like=post.like + 1)
+                post.update(hate=post.hate - 1)
             return JsonResponse({'message': '完成'},
                                 status=status.HTTP_200_OK,
                                 safe=False
@@ -195,12 +217,16 @@ class PostView(viewsets.ModelViewSet):
                                                   attitude=ATTITUTE.HATE
                                                   )
                 new_attitude.save()
+                post.update(hate=post.hate + 1)
             elif attitude.attitude == ATTITUTE.HATE:
                 # 此前为踩，取消踩
                 attitude.delete()
+                post.update(hate = post.hate - 1)
             elif attitude.attitude == ATTITUTE.LIKE:
                 # 此前为赞，改为踩
                 attitude.update(attitude=ATTITUTE.HATE)
+                post.update(like=post.like - 1)
+                post.update(hate=post.hate + 1)
             return JsonResponse({'message': '完成'},
                                 status=status.HTTP_200_OK,
                                 safe=False
