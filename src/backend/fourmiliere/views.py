@@ -5,7 +5,7 @@ from .models import User, Post
 from .serializers import UserSerializer, PostSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 
 
 class UserView(viewsets.ModelViewSet):
@@ -21,28 +21,66 @@ class UserView(viewsets.ModelViewSet):
                                                 password=password)
                 return JsonResponse({'username': user.username},
                                     status=status.HTTP_200_OK,
-                                    safe=False)
+                                    safe=False
+                                    )
             except Exception as e:
                 return JsonResponse({'error': str(e)},
                                     status=status.HTTP_400_BAD_REQUEST,
-                                    safe=False)
+                                    safe=False
+                                    )
         return JsonResponse({'error': 'bad request'},
-                            status=status.HTTP_400_BAD_REQUEST, safe=False)
+                            status=status.HTTP_400_BAD_REQUEST, safe=False
+                            )
 
     def sign_in(request):
         username = request.GET.get('username')
         password = request.GET.get('password')
-        user = authenticate(request=request,
-                            nickname=username,
+        user = authenticate(nickname=username,
                             password=password)
+
         if not user:
+            login(request, user)
             return JsonResponse({'username': username},
                                 status=status.HTTP_200_OK,
-                                safe=False)
+                                safe=False
+                                )
         else:
-            return JsonResponse({},
+            return JsonResponse({'error': '错误的用户名或密码'},
                                 status=status.HTTP_401_UNAUTHORIZED,
-                                safe=False)
+                                safe=False
+                                )
+
+    def is_login(request):
+        if not request.user.is_authenticated:
+            return JsonResponse({'message': '未登录'},
+                                status=status.HTTP_401_UNAUTHORIZED,
+                                safe=False
+                                )
+        else:
+            return JsonResponse({'message': '已登录',
+                                 'username': request.user.username
+                                 },
+                                status=status.HTTP_200_OK,
+                                safe=False
+                                )
+
+    def sign_out(request):
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': '未登录'},
+                                status=status.HTTP_401_UNAUTHORIZED,
+                                safe=False
+                                )
+        try:
+            logout(request, request.user)
+            return JsonResponse({'message': '登出成功'},
+                                status=status.HTTP_200_OK,
+                                safe=False
+                                )
+        except Exception as e:
+            return JsonResponse({'error': str(e)},
+                                status=status.HTTP_400_BAD_REQUEST,
+                                safe=False
+                                )
 
 
 class PostView(viewsets.ModelViewSet):
@@ -55,17 +93,20 @@ class PostView(viewsets.ModelViewSet):
             post.save()
             return JsonResponse({'message': '发布成功'},
                                 status=status.HTTP_200_OK,
-                                safe=False)
+                                safe=False
+                                )
         else:
             return JsonResponse({'error': '发布失败'},
                                 status=status.HTTP_401_UNAUTHORIZED,
-                                safe=False)
+                                safe=False
+                                )
 
     def like(request):
         if not request.user.is_authenticated:
             return JsonResponse({'error': '未登录'},
                                 status=status.HTTP_401_UNAUTHORIZED,
-                                safe=False)
+                                safe=False
+                                )
         try:
             pid = request.GET.get('pid')
             post = Post.objects.filter(id=pid)
@@ -73,17 +114,20 @@ class PostView(viewsets.ModelViewSet):
             post.save()
             return JsonResponse({'message': '完成'},
                                 status=status.HTTP_200_OK,
-                                safe=False)
+                                safe=False
+                                )
         except Exception as e:
             return JsonResponse({'error', str(e)},
                                 status=status.HTTP_400_BAD_REQUEST,
-                                safe=False)
+                                safe=False
+                                )
 
     def hate(request):
         if not request.user.is_authenticated:
             return JsonResponse({'error': '未登录'},
                                 status=status.HTTP_401_UNAUTHORIZED,
-                                safe=False)
+                                safe=False
+                                )
         try:
             pid = request.GET.get('pid')
             post = Post.objects.filter(id=pid)
@@ -91,8 +135,10 @@ class PostView(viewsets.ModelViewSet):
             post.save()
             return JsonResponse({'message': '完成'},
                                 status=status.HTTP_200_OK,
-                                safe=False)
+                                safe=False
+                                )
         except Exception as e:
             return JsonResponse({'error', str(e)},
                                 status=status.HTTP_400_BAD_REQUEST,
-                                safe=False)
+                                safe=False
+                                )
