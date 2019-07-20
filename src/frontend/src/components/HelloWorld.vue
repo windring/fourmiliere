@@ -35,7 +35,19 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$http.get('http://backend.docker.io/user/signup', {
+        username: '111',
+        password: '111'
+      }).then((res) => {
+        console.log(res)
+      }).then((error) => {
+        console.log(error)
+      })
+    })
+  },
 }
 </script>
 
