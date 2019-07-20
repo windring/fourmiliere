@@ -5,10 +5,16 @@ from rest_framework import routers
 
 routers = routers.DefaultRouter()
 routers.register('fourmiliere', views.UserView)
+routers.register('fourmiliere', views.PostView)
 
 
 urlpatterns = [
-    path('', include(routers.urls)),
-    path('signup', views.UserView.sign_up),
-    path('signin', views.UserView.sign_in, name="sign_in"),
+    # path('', include(routers.urls)),
+    path('user/signup/', views.UserView.sign_up),
+    path('user/signin/', views.UserView.sign_in),
+    path('user/auth/', views.UserView.is_login),
+    path('post/hate/', views.PostView.hate),
+    path('post/like/', views.PostView.like),
+    path('post/new/', views.PostView.new_post),
+    path('post/all/', views.PostView.all_post)
 ]

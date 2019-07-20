@@ -26,5 +26,5 @@ from rest_framework import authentication, permissions
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/', include('fourmiliere.urls')),
+    path('api/', include('fourmiliere.urls')),
 ]
