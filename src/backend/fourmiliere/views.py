@@ -1,12 +1,17 @@
 from django.http import JsonResponse
 from rest_framework import viewsets
-from .models import User, Post, Attitue
+from .models import User, Post, Attitude
 from .models import ATTITUTE
 from .serializers import UserSerializer, PostSerializer, AttitudeSerializer
 from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 from django.core.paginator import Paginator
+
+
+class AttitudeView(viewsets.ModelViewSet):
+    queryset = Attitude.objects.all()
+    serializer_class = AttitudeSerializer
 
 
 class UserView(viewsets.ModelViewSet):
@@ -95,8 +100,8 @@ class PostView(viewsets.ModelViewSet):
         if request.user.is_authenticated:
             username = request.user.username
             for i in lst:
-                attitude = Attitue.objects().filter(username=username,
-                                                    pid=i.pid)
+                attitude = Attitude.objects().filter(username=username,
+                                                     pid=i.pid)
                 i['attitude'] = attitude.attitude
                 ret.append(i)
         else:
@@ -171,7 +176,8 @@ class PostView(viewsets.ModelViewSet):
                                     status=status.HTTP_400_BAD_REQUEST,
                                     safe=False
                                     )
-            attitude = Attitue.objects().filter(pid=id, username=username)
+            attitude = Attitude.objects.filter(pid=id)\
+                .filter(username=username)
             if not attitude:
                 # 此前用户对这条留言没有态度
                 new_attitude = AttitudeSerializer(username=username,
@@ -215,7 +221,8 @@ class PostView(viewsets.ModelViewSet):
                                     status=status.HTTP_400_BAD_REQUEST,
                                     safe=False
                                     )
-            attitude = Attitue.objects().filter(pid=id, username=username)
+            attitude = Attitude.objects.filter(pid=id)\
+                .filter(username=username)
             if not attitude:
                 # 此前用户对这条留言没有态度
                 new_attitude = AttitudeSerializer(username=username,
@@ -227,7 +234,7 @@ class PostView(viewsets.ModelViewSet):
             elif attitude.attitude == ATTITUTE.HATE:
                 # 此前为踩，取消踩
                 attitude.delete()
-                post.update(hate = post.hate - 1)
+                post.update(hate=post.hate - 1)
             elif attitude.attitude == ATTITUTE.LIKE:
                 # 此前为赞，改为踩
                 attitude.update(attitude=ATTITUTE.HATE)
@@ -242,4 +249,3 @@ class PostView(viewsets.ModelViewSet):
                                 status=status.HTTP_400_BAD_REQUEST,
                                 safe=False
                                 )
-

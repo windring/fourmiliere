@@ -24,7 +24,7 @@ class Post(models.Model):
     hate = models.IntegerField()
 
 
-class Attitue(models.Model):
+class Attitude(models.Model):
     id = models.AutoField(primary_key=True)
     username = models.ForeignKey('User', on_delete=models.CASCADE)
     pid = models.ForeignKey('Post', on_delete=models.CASCADE, to_field='id')

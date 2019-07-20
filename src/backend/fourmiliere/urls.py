@@ -6,6 +6,7 @@ from rest_framework import routers
 routers = routers.DefaultRouter()
 routers.register('fourmiliere', views.UserView)
 routers.register('fourmiliere', views.PostView)
+routers.register('fourmiliere', views.AttitudeView)
 
 
 urlpatterns = [

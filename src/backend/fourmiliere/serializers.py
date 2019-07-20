@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Post, Attitue
+from .models import User, Post, Attitude
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,5 +16,5 @@ class PostSerializer(serializers.ModelSerializer):
 
 class AttitudeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Attitue
+        model = Attitude
         fields = ('id', 'username', 'pid', 'attitude')
