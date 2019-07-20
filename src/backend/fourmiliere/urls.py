@@ -17,5 +17,6 @@ urlpatterns = [
     path('post/hate/', views.PostView.hate),
     path('post/like/', views.PostView.like),
     path('post/new/', views.PostView.new_post),
-    path('post/all/', views.PostView.all_post)
+    path('post/all/', views.PostView.all_post),
+    path('post/page/', views.PostView.page)
 ]

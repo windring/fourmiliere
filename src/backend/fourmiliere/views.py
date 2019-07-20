@@ -107,7 +107,7 @@ class PostView(viewsets.ModelViewSet):
 
     def all_post(request):
         lst = Post.objects.all()
-        lst = PostView.add_myattitude(request, lst)
+        # lst = PostView.add_myattitude(request, lst)
         return JsonResponse(serializers.serialize('json', lst),
                             status=status.HTTP_200_OK,
                             safe=False
@@ -122,9 +122,10 @@ class PostView(viewsets.ModelViewSet):
                                 safe=False
                                 )
         try:
-            pages = Paginator(Post.objects().all(), page_size)
+            pages = Paginator(Post.objects.all(), page_size)
+            pages = pages.get_page(index)
             ret = pages(index).object_list
-            ret = PostView.add_myattitude(request, ret)
+            # ret = PostView.add_myattitude(request, ret)
             return JsonResponse(serializers.serialize(ret),
                                 status=status.HTTP_200_OK,
                                 safe=False
