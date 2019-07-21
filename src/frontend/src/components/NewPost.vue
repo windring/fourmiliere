@@ -35,13 +35,13 @@ export default {
           message: '发布成功',
           title: 'fourmiliere 留言板'
         })
-        console.log(res)
+        // console.log(res)
       }).catch((err) => {
         this.$notification.error({
           message: '留言失败',
           title: 'fourmiliere 留言板'
         })
-        console.log(err)
+        // console.log(err)
       })
     }
   }

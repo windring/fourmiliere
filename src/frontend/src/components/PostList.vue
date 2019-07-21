@@ -28,7 +28,7 @@ export default {
       listData: [],
       pagination: {
         onChange: (page) => {
-          console.log(page);
+          // console.log(page);
         },
         pageSize: 10,
       },
@@ -41,7 +41,7 @@ export default {
           pid: id
         }
       }).then((res) => {
-        console.log(res)
+        // console.log(res)
         item.like = res.data.like
       }).catch((err) => {
         this.$notification.error({
@@ -56,7 +56,7 @@ export default {
           pid: id
         }
       }).then((res) => {
-        console.log(res)
+        // console.log(res)
         item.hate = res.data.hate
       }).catch((err) => {
         this.$notification.error({
@@ -77,7 +77,7 @@ export default {
           return i.fields
         })
         this.isLoading = false
-        console.log(this.listData)
+        // console.log(this.listData)
       })
     })
   }

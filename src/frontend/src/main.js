@@ -9,7 +9,7 @@ import store from './store'
 Vue.config.productionTip = false
 axios.defaults.withCredentials = true
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-axios.defaults.baseURL = 'http://192.168.99.100:8002/api/'
+axios.defaults.baseURL = 'http://backend.docker.io/api/'
 
 Vue.use(Antd)
 Vue.use(VueAxios, axios)
