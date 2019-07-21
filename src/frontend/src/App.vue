@@ -45,7 +45,7 @@ export default {
     signout () {
       this.$http.get('user/signout/')
         .then(() => {
-          window.reload()
+          window.location.reload()
         })
         .catch(() => {
           this.$notification.error({
