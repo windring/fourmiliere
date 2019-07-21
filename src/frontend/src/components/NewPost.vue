@@ -30,18 +30,19 @@ export default {
           create_time: new Date().getTime(),
           content: this.post
         }
-      }).then((res) => {
+      }).then(() => {
         this.$notification.info({
           message: '发布成功',
           title: 'fourmiliere 留言板'
         })
-        console.log(res)
-      }).catch((err) => {
+        window.location.reload()
+        // console.log(res)
+      }).catch(() => {
         this.$notification.error({
           message: '留言失败',
           title: 'fourmiliere 留言板'
         })
-        console.log(err)
+        // console.log(err)
       })
     }
   }

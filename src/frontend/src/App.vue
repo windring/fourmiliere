@@ -43,11 +43,11 @@ export default {
       this.$store.commit('updateShowModal', true)
     },
     signout () {
-      this.$http.get('user/signout')
-        .then((res) => {
+      this.$http.get('user/signout/')
+        .then(() => {
           window.reload()
         })
-        .catch((err) => {
+        .catch(() => {
           this.$notification.error({
             message: '登出失败',
             title: 'fourmiliere 留言板'

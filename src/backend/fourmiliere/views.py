@@ -104,8 +104,8 @@ class PostView(viewsets.ModelViewSet):
         if request.user.is_authenticated:
             username = request.user.username
             for i in lst:
-                attitude = Attitude.objects().filter(username=username,
-                                                     pid=i.pid)
+                attitude = Attitude.objects.filter(username=username,
+                                                   pid=i.pid)
                 i['attitude'] = attitude.attitude
                 ret.append(i)
         else:
@@ -212,7 +212,8 @@ class PostView(viewsets.ModelViewSet):
                 post.hate = post.hate - 1
                 post.save()
             return JsonResponse({'message': '完成',
-                                 'like': post.like},
+                                 'like': post.like,
+                                 'hate': post.hate},
                                 status=status.HTTP_200_OK,
                                 safe=False
                                 )
@@ -270,7 +271,8 @@ class PostView(viewsets.ModelViewSet):
                 post.hate = post.hate + 1
                 post.save()
             return JsonResponse({'message': '完成',
-                                 'hate': post.hate},
+                                 'hate': post.hate,
+                                 'like': post.like},
                                 status=status.HTTP_200_OK,
                                 safe=False
                                 )

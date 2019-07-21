@@ -16,7 +16,7 @@ export default new Vuex.Store({
     updateUsername (state, username) {
       state.username = username
       state.loginState = !state.loginState
-      console.log(state.loginState)
+      // console.log(state.loginState)
     }
   },
   actions: {
