@@ -43,7 +43,7 @@ export default {
       this.$store.commit('updateShowModal', true)
     },
     signout () {
-      this.$http.get('user/signout')
+      this.$http.get('user/signout/')
         .then(() => {
           window.reload()
         })
