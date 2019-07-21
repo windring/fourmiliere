@@ -43,10 +43,10 @@ export default {
           username: '111',
           password: '111'
         }
-      }).then((res) => {
+      }).then(() => {
         // console.log(res)
         // console.log('没出错')
-      }).catch((error) => {
+      }).catch(() => {
         // console.log(error.response.data)
         // console.log('出错了')
       })

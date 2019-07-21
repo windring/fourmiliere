@@ -50,7 +50,7 @@ export default {
         this.isShow = false
         this.$store.commit('updateUsername', res.data.username)
       })
-      .catch((err) => {
+      .catch(() => {
         // console.log('登录失败')
         // console.log(err.response.data.error)
         this.$notification.error({

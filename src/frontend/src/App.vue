@@ -44,10 +44,10 @@ export default {
     },
     signout () {
       this.$http.get('user/signout')
-        .then((res) => {
+        .then(() => {
           window.reload()
         })
-        .catch((err) => {
+        .catch(() => {
           this.$notification.error({
             message: '登出失败',
             title: 'fourmiliere 留言板'

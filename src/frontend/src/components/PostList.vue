@@ -11,7 +11,7 @@
           {{ item.hate }}
         </span>
       </template>
-      <a-list-item-meta :description="item.content">
+      <a-list-item-meta :description="new Date(item['create_time']).toLocaleString()">
         <a slot="title" :href="item.href">{{item.username}}</a>
         <a-avatar slot="avatar"/>
       </a-list-item-meta>
@@ -27,7 +27,7 @@ export default {
       isLoading: true,
       listData: [],
       pagination: {
-        onChange: (page) => {
+        onChange: () => {
           // console.log(page);
         },
         pageSize: 10,
@@ -43,9 +43,10 @@ export default {
       }).then((res) => {
         // console.log(res)
         item.like = res.data.like
+        item.hate = res.data.hate
       }).catch((err) => {
         this.$notification.error({
-          message: '点赞失败',
+          message: `点赞失败, ${err}`,
           title: 'fourmiliere 留言板'
         })
       })
@@ -58,27 +59,33 @@ export default {
       }).then((res) => {
         // console.log(res)
         item.hate = res.data.hate
-      }).catch((err) => {
+        item.like = res.data.like
+      }).catch(() => {
         this.$notification.error({
           message: '踩留言失败',
           title: 'fourmiliere 留言板'
         })
       })
-    }
-  },
-  mounted () {
-    this.$nextTick(() => {
+    },
+    loadData () {
       this.$http.get('post/all/', {
         params: {
         }
       }).then((res) => {
-        this.listData = JSON.parse(res.data).map(i => {
+        const listData = JSON.parse(res.data).map(i => {
           i.fields.id = i.pk
           return i.fields
         })
+        this.listData = listData.sort((a, b) => b['create_time'] - a['create_time'])
         this.isLoading = false
         // console.log(this.listData)
       })
+    },
+  },
+  mounted () {
+    const vm = this
+    this.$nextTick(() => {
+      vm.loadData()
     })
   }
 }

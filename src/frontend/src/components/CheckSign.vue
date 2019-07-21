@@ -18,13 +18,13 @@
         this.$http.get('user/auth/')
           .then((res) => {
             // console.log(res)
-            this.$store.commit(updateUsername, res.data.username)
+            this.$store.commit('updateUsername', res.data.username)
             this.$notification.info({
               message: `${res.data.username} 你好，你已经登录。`,
               title: 'fourmiliere 留言板'
             })
           })
-          .catch((err) => {
+          .catch(() => {
             // console.log(err)
             this.openNotification()
           })
