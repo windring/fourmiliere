@@ -11,7 +11,7 @@ docker-compose run backend migrate
 
 1712960
 
-<script>alert()</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 ------
 
