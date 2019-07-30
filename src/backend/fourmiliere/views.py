@@ -151,6 +151,7 @@ class PostView(viewsets.ModelViewSet):
         postbody['username'] = request.user.username
         postbody['like'] = 0
         postbody['hate'] = 0
+        postbody['create_time'] = int(postbody['create_time'])
         post = PostSerializer(data=postbody)
         if request.user.is_authenticated and post.is_valid():
             post.save()

@@ -17,7 +17,7 @@ class User(AbstractUser):
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
+    username = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, to_field="username")
     content = models.CharField(max_length=2000)
     create_time = models.BigIntegerField()
     like = models.IntegerField()
@@ -26,7 +26,7 @@ class Post(models.Model):
 
 class Attitude(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.ForeignKey('User', on_delete=models.CASCADE)
+    username = models.ForeignKey('User', on_delete=models.CASCADE, to_field="username")
     pid = models.ForeignKey('Post', on_delete=models.CASCADE, to_field='id')
     attitude = models.IntegerField()
 
